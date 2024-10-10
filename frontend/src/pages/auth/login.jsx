@@ -38,7 +38,6 @@ const Login = () => {
         })
       );
 
-      alert("Login successful!");
       navigate("/blogfeed");
     } catch (error) {
       console.error(error);
@@ -49,40 +48,42 @@ const Login = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md mt-6"
+      className="max-w-lg mx-auto p-8 bg-gradient-to-br rounded-lg shadow-lg border border-gray-200 transform transition-all hover:scale-105"
     >
-      <h2 className="text-2xl font-semibold mb-4">Login</h2>
+      <h2 className="text-3xl font-extrabold text-gray-900 mb-6 text-center">
+        Login
+      </h2>
 
-      {error && <p className="text-red-500 mb-4">{error}</p>}
+      {error && <p className="text-red-500 text-center mb-4">{error}</p>}
 
       <input
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
+        placeholder="Your Email"
         required
-        className="w-full p-2 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full p-4 mb-4 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-transform transform hover:scale-105"
       />
 
       <input
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
+        placeholder="Your Password"
         required
-        className="w-full p-2 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full p-4 mb-6 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-transform transform hover:scale-105"
       />
 
       <button
         type="submit"
-        className="w-full bg-blue-500 text-white font-semibold py-2 rounded hover:bg-blue-600 transition duration-200"
+        className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold py-3 rounded-lg hover:bg-gradient-to-r hover:from-purple-700 hover:to-indigo-700 transition ease-in-out transform hover:scale-105"
       >
         Login
       </button>
 
-      <p className="mt-4 text-center">
-        New member?{" "}
-        <Link to="/signup" className="text-blue-500 hover:underline">
+      <p className="mt-6 text-center text-gray-800">
+        Not a member?{" "}
+        <Link to="/signup" className="text-indigo-600 hover:underline">
           Signup here
         </Link>
       </p>

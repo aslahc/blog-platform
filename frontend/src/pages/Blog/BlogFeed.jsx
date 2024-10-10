@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react"; // Import useState
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
@@ -12,93 +12,172 @@ import {
   fetchBlogsSuccess,
   fetchBlogsFailure,
 } from "../../redux/store/blogsSlice";
+
 const BlogFeed = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   // Select users and loading/error state from Redux store
   const { users, loading, error } = useSelector((state) => state.users);
-  console.log(users);
+  const { blogs } = useSelector((state) => state.blogs);
+
+  // State for selected location
+  const [selectedLocation, setSelectedLocation] = useState("");
+
+  // Handle blog creation navigation
   const handleCreateBlog = () => {
     navigate("/create");
   };
 
   // Fetch users from backend and dispatch actions
   const fetchUsers = async () => {
-    dispatch(fetchUsersStart()); // Start fetching users (loading state)
+    dispatch(fetchUsersStart());
     try {
       const response = await axios.get("http://localhost:5000/api/auth/users");
-      dispatch(fetchUsersSuccess(response.data)); // Save users to Redux on success
+      dispatch(fetchUsersSuccess(response.data));
     } catch (err) {
-      dispatch(fetchUsersFailure(err.message)); // Dispatch error action on failure
+      dispatch(fetchUsersFailure(err.message));
     }
   };
 
   useEffect(() => {
-    fetchUsers(); // Fetch users when the component mounts
+    fetchUsers();
   }, []);
+
+  // Fetch blogs from backend and dispatch actions
   const fetchBlogs = async () => {
-    dispatch(fetchBlogsStart()); // Start fetching blogs (loading state)
+    dispatch(fetchBlogsStart());
     try {
-      const response = await axios.get("http://localhost:5000/api/blogs"); // Update with correct API endpoint
-
-      dispatch(fetchBlogsSuccess(response.data)); // Save blogs to Redux on success
+      const response = await axios.get("http://localhost:5000/api/blogs");
+      dispatch(fetchBlogsSuccess(response.data));
     } catch (err) {
-      dispatch(fetchBlogsFailure(err.message)); // Dispatch error action on failure
+      dispatch(fetchBlogsFailure(err.message));
     }
   };
 
   useEffect(() => {
-    fetchBlogs(); // Fetch blogs when the component mounts
+    fetchBlogs();
   }, []);
 
-  const { blogs } = useSelector((state) => state.blogs);
-  console.log(blogs);
+  // Filter blogs based on selected location
+  const filteredBlogs = selectedLocation
+    ? blogs.filter((blog) => blog.location === selectedLocation)
+    : blogs;
+
   return (
-    <div>
-      <h1>My Blog</h1>
+    <div className="max-w-4xl mx-auto p-5">
+      <h1 className="text-3xl font-bold text-center mb-6">My Blog</h1>
+
       <button
-        className="bg-red-500 m-5 rounded-lg p-5"
+        className="bg-red-500 text-white font-semibold py-2 px-4 rounded-lg mb-5 hover:bg-red-600 transition"
         onClick={handleCreateBlog}
       >
         Create a Blog
       </button>
 
-      {/* Render loading, error or users data */}
-      {loading && <p>Loading users...</p>}
-      {error && <p className="text-red-500">{error}</p>}
-      <div>
-        <h2>All Blogs</h2>
-        {blogs.length > 0 ? (
-          blogs.map((blog) => (
-            <div key={blog._id} className="border p-4 m-2">
-              <h3>{blog.title}</h3>
-              {blog.image && (
-                <img
-                  src={blog.image}
-                  alt={blog.title}
-                  className="w-full h-auto mb-4"
-                />
-              )}
-              {/* Conditional rendering for video */}
-              {blog.video && (
-                <video src={blog.video} controls className="w-full h-auto mb-4">
-                  Your browser does not support the video tag.
-                </video>
-              )}
-              <p>
-                {typeof blog.content === "string"
-                  ? blog.content
-                  : "Content not available"}
-              </p>
-              <p>
-                <strong>Location:</strong>{" "}
-                {blog.location ? blog.location : "Location not available"}
-              </p>
-            </div>
-          ))
+      {/* Location Filter Dropdown */}
+      <div className="mb-5">
+        <label className="block text-gray-700 mb-2" htmlFor="location-filter">
+          Filter by Location:
+        </label>
+        <select
+          id="location-filter"
+          className="border rounded-lg py-2 px-3 w-full"
+          value={selectedLocation}
+          onChange={(e) => setSelectedLocation(e.target.value)}
+        >
+          <option value="">All Locations</option>
+          {/* Here you can dynamically generate options based on available locations */}
+          {Array.from(new Set(blogs.map((blog) => blog.location))) // Get unique locations
+            .map((location, index) => (
+              <option key={index} value={location}>
+                {location}
+              </option>
+            ))}
+        </select>
+      </div>
+
+      {loading && <p className="text-center text-gray-500">Loading blogs...</p>}
+      {error && <p className="text-red-500 text-center">{error}</p>}
+
+      <h2 className="text-2xl font-semibold my-4">All Blogs</h2>
+
+      <div className="space-y-4">
+        {filteredBlogs.length > 0 ? (
+          filteredBlogs.map((blog) => {
+            const author = users.find((user) => user._id === blog.author._id);
+            return (
+              <div
+                key={blog._id}
+                className="border rounded-lg shadow-md p-4 bg-gray-50"
+              >
+                <h1 className="text-gray-600">
+                  {author ? author.name : "Unknown Author"}
+                </h1>
+                <h3 className="text-xl font-bold">{blog.title}</h3>
+
+                <div className="mt-2">
+                  {blog.content.map((block) => {
+                    switch (block.type) {
+                      case "paragraph":
+                        return (
+                          <p key={block.id} className="text-gray-700">
+                            {block.data.text}
+                          </p>
+                        );
+                      case "image":
+                        return (
+                          <img
+                            key={block.id}
+                            src={block.data.file.url}
+                            alt={block.data.caption || "Blog Image"}
+                            className="w-full h-auto mt-2 rounded-md"
+                          />
+                        );
+                      case "header":
+                        return (
+                          <h2
+                            key={block.id}
+                            className="text-xl font-semibold mt-2"
+                          >
+                            {block.data.text}
+                          </h2>
+                        );
+                      case "list":
+                        return (
+                          <ul key={block.id} className="list-disc ml-5 mt-2">
+                            {block.data.items.map((item, itemIndex) => (
+                              <li key={itemIndex} className="text-gray-700">
+                                {item}
+                              </li>
+                            ))}
+                          </ul>
+                        );
+                      default:
+                        return null;
+                    }
+                  })}
+                </div>
+
+                {blog.video && (
+                  <video
+                    src={blog.video}
+                    controls
+                    className="w-full h-auto mt-4 mb-2 rounded-lg"
+                  >
+                    Your browser does not support the video tag.
+                  </video>
+                )}
+
+                <p className="mt-2">
+                  <strong>Location:</strong>{" "}
+                  {blog.location ? blog.location : "Location not available"}
+                </p>
+              </div>
+            );
+          })
         ) : (
-          <p>No blogs found.</p>
+          <p className="text-center text-gray-500">No blogs found.</p>
         )}
       </div>
     </div>

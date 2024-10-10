@@ -34,7 +34,8 @@ router.post("/", async (req, res) => {
       image,
       video,
     });
-
+    // Delete all documents in the Blog collection
+    // await Blog.deleteMany({});
     // Save the new blog post to the database
     const savedBlog = await newBlog.save();
     console.log("Data saved sesefuly");
