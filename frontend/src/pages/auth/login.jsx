@@ -52,7 +52,7 @@ const Login = () => {
       if (error.response && error.response.data && error.response.data.msg) {
         setError(error.response.data.msg); // Set the error message from the response
       } else {
-        setError("Login failed! Please try again."); // Generic error message
+        setError("check your email and pass"); // Generic error message
       }
     }
   };
