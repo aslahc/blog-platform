@@ -123,7 +123,10 @@ const BlogFeed = () => {
             Logout
           </button>
         ) : (
-          <button className="bg-black text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-600 transition duration-300 ease-in-out shadow-md w-full sm:w-auto mt-4 sm:mt-0">
+          <button
+            onClick={handleLogout}
+            className="bg-black text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-600 transition duration-300 ease-in-out shadow-md w-full sm:w-auto mt-4 sm:mt-0"
+          >
             login/signup
           </button>
         )}
