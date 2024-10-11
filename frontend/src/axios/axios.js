@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "https://blog-backend-oguq.onrender.com"; // Set your base URL here
+const API_URL = "http://51.21.146.181"; // Set your base URL here
 const axiosInstance = axios.create({ baseURL: API_URL });
 
 // Register user
