@@ -12,8 +12,13 @@ const app = express();
 // Connect to MongoDB
 connectDB();
 
-// Middleware
-app.use(cors());
+const corsOptions = {
+  origin: "*", // The frontend origin that should be allowed
+  methods: "GET,POST,PUT,DELETE", // Specify which HTTP methods are allowed
+  credentials: true, // Enable cookies if needed
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Routes
