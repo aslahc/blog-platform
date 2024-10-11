@@ -1,5 +1,6 @@
 # Blog  APP
 ## Live url Link
+<img src='https://github.com/aslahc/blog-platform/blob/main/frontend/public/Screenshot%202024-10-11%20172134.png?raw=true'>
 - [blog site](https://blogg-app-xi.vercel.app/)
 
 ## YouTube Video Link
