@@ -84,13 +84,19 @@ const BlogForm = () => {
       onReady: () => {
         console.log("Editor.js is ready to work!");
         editorInstance.current = editor;
-
-        // Remove the first block on editor ready
+        // Scroll to the bottom of the editor on initial render
+        const editorHolder = document.getElementById("editorjs");
+        editorHolder.scrollTop = editorHolder.scrollHeight;
+        // Save the current content and manipulate the blocks
         editorInstance.current.save().then((data) => {
           const blocks = data.blocks;
+          console.log("length", blocks.length);
           if (blocks.length > 0) {
             blocks.shift(); // Remove the first block
-            editorInstance.current.blocks.render(blocks);
+            editorInstance.current.clear(); // Clear all blocks
+            blocks.forEach((block) => {
+              editorInstance.current.blocks.render(block); // Render remaining blocks
+            });
           }
         });
       },
@@ -303,9 +309,6 @@ const BlogForm = () => {
           }}
         >
           {/* Optional: You can integrate a rich text editor library here for better UX */}
-          <p className="text-gray-500 text-center">
-            Start writing your blog content...
-          </p>
         </div>
 
         {/* Submit Button */}
