@@ -37,7 +37,7 @@ const Signup = () => {
       const data = await signup({ name, email, password });
       localStorage.setItem("token", data.token);
       alert("Signup successful!");
-      navigate("/"); // Redirect to the login page after signup
+      navigate("/login"); // Redirect to the login page after signup
     } catch (error) {
       console.error(error);
       alert("Signup failed!");

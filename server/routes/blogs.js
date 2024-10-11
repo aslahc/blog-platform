@@ -3,7 +3,7 @@ const Blog = require("../models/Blog");
 const router = express.Router();
 const Razorpay = require("razorpay");
 const mongoose = require("mongoose");
-
+const authMiddleware = require("../middleware/authMiddleware");
 // Get blogs based on user location
 // Get all blogs
 router.get("/", async (req, res) => {
@@ -20,7 +20,7 @@ router.get("/", async (req, res) => {
 });
 
 // Create a new blog
-router.post("/", async (req, res) => {
+router.post("/", authMiddleware, async (req, res) => {
   try {
     // Extract data from req.body
     const { title, content, author, location, image, video } = req.body;
@@ -48,10 +48,43 @@ router.post("/", async (req, res) => {
     res.status(500).json({ error: "Failed to save blog" });
   }
 });
+router.put("/:id", authMiddleware, async (req, res) => {
+  try {
+    console.log("entering to the edit post");
+    const { id } = req.params;
+    const { title, content, location, image, video } = req.body;
 
+    // Find the blog by ID
+    const blog = await Blog.findById(id);
+    console.log("got bloc", blog);
+    // Check if the logged-in user is the author of the blog
+    // if (blog.author.toString() !== req.user.id) {
+    //   return res
+    //     .status(403)
+    //     .json({ message: "Not authorized to edit this post" });
+    // }
+    console.log("12");
+
+    // Update the blog post
+    blog.title = title || blog.title;
+    blog.content = content || blog.content;
+    blog.location = location || blog.location;
+    blog.image = image || blog.image;
+    blog.video = video || blog.video;
+
+    const updatedBlog = await blog.save();
+    console.log("edited complete");
+    res
+      .status(200)
+      .json({ message: "Blog updated successfully", blog: updatedBlog });
+  } catch (error) {
+    console.error("Error updating blog:", error);
+    res.status(500).json({ error: "Failed to update blog" });
+  }
+});
 // Razorpay Checkout Route
 // Razorpay Checkout Route
-router.post("/checkout", async (req, res) => {
+router.post("/checkout", authMiddleware, async (req, res) => {
   console.log("entering checkout");
   const { blogId, amount } = req.body;
   const instance = new Razorpay({

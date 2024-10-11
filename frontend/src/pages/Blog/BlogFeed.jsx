@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"; // Import useState
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
 import {
   fetchUsersStart,
   fetchUsersSuccess,
@@ -12,6 +11,8 @@ import {
   fetchBlogsSuccess,
   fetchBlogsFailure,
 } from "../../redux/store/blogsSlice";
+import { logout } from "../../redux/store/authSlice";
+import axiosInstance from "../../axios/axios";
 
 const BlogFeed = () => {
   const navigate = useNavigate();
@@ -20,7 +21,10 @@ const BlogFeed = () => {
   // Select users and loading/error state from Redux store
   const { users, loading, error } = useSelector((state) => state.users);
   const { blogs } = useSelector((state) => state.blogs);
-
+  console.log("111", blogs);
+  const { user } = useSelector((state) => state.auth);
+  console.log("Auth State:", user);
+  const userData = user.id;
   // State for selected location
   const [selectedLocation, setSelectedLocation] = useState("");
 
@@ -33,7 +37,7 @@ const BlogFeed = () => {
   const fetchUsers = async () => {
     dispatch(fetchUsersStart());
     try {
-      const response = await axios.get("http://localhost:5000/api/auth/users");
+      const response = await axiosInstance.get("/api/auth/users");
       dispatch(fetchUsersSuccess(response.data));
     } catch (err) {
       dispatch(fetchUsersFailure(err.message));
@@ -48,7 +52,7 @@ const BlogFeed = () => {
   const fetchBlogs = async () => {
     dispatch(fetchBlogsStart());
     try {
-      const response = await axios.get("http://localhost:5000/api/blogs");
+      const response = await axiosInstance.get("/api/blogs");
       dispatch(fetchBlogsSuccess(response.data));
     } catch (err) {
       dispatch(fetchBlogsFailure(err.message));
@@ -58,7 +62,15 @@ const BlogFeed = () => {
   useEffect(() => {
     fetchBlogs();
   }, []);
-
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // Remove token
+    dispatch(logout()); // Clear user from Redux if you're using Redux
+    navigate("/login"); // Redirect to login page
+  };
+  const handleEdit = (blogId) => {
+    const blogToEdit = blogs.find((blog) => blog._id === blogId);
+    navigate(`/edit-blog/${blogId}`, { state: { blog: blogToEdit } });
+  };
   // Filter blogs based on selected location
   const filteredBlogs = selectedLocation
     ? blogs.filter((blog) => blog.location === selectedLocation)
@@ -74,7 +86,14 @@ const BlogFeed = () => {
       >
         Create a Blog
       </button>
-
+      <button
+        className="bg-red-500 p-3 rounded-lg"
+        onClick={() => {
+          handleLogout();
+        }}
+      >
+        logout
+      </button>
       {/* Location Filter Dropdown */}
       <div className="mb-5">
         <label className="block text-gray-700 mb-2" htmlFor="location-filter">
@@ -104,78 +123,91 @@ const BlogFeed = () => {
 
       <div className="space-y-4">
         {filteredBlogs.length > 0 ? (
-          filteredBlogs.map((blog) => {
-            const author = users.find((user) => user._id === blog.author._id);
-            return (
-              <div
-                key={blog._id}
-                className="border rounded-lg shadow-md p-4 bg-gray-50"
-              >
-                <h1 className="text-gray-600">
-                  {author ? author.name : "Unknown Author"}
-                </h1>
-                <h3 className="text-xl font-bold">{blog.title}</h3>
+          filteredBlogs
+            .map((blog, index) => {
+              const author = users.find((user) => user._id === blog.author._id);
+              console.log("[", user?._id, "[][]", blog.author._id);
+              const isAuthor = userData === blog.author._id;
+              console.log(isAuthor);
+              return (
+                <div
+                  key={blog._id || index}
+                  className="border rounded-lg shadow-md p-4 bg-gray-50"
+                >
+                  <h1 className="text-gray-600">
+                    {author ? author.name : "Unknown Author"}
+                  </h1>
+                  {isAuthor && (
+                    <button
+                      onClick={() => handleEdit(blog._id)}
+                      className="bg-blue-500 text-white py-2 px-4 rounded-lg mt-2 hover:bg-blue-600"
+                    >
+                      Edit Post
+                    </button>
+                  )}
+                  <h3 className="text-xl font-bold">{blog.title}</h3>
 
-                <div className="mt-2">
-                  {blog.content.map((block) => {
-                    switch (block.type) {
-                      case "paragraph":
-                        return (
-                          <p key={block.id} className="text-gray-700">
-                            {block.data.text}
-                          </p>
-                        );
-                      case "image":
-                        return (
-                          <img
-                            key={block.id}
-                            src={block.data.file.url}
-                            alt={block.data.caption || "Blog Image"}
-                            className="w-full h-auto mt-2 rounded-md"
-                          />
-                        );
-                      case "header":
-                        return (
-                          <h2
-                            key={block.id}
-                            className="text-xl font-semibold mt-2"
-                          >
-                            {block.data.text}
-                          </h2>
-                        );
-                      case "list":
-                        return (
-                          <ul key={block.id} className="list-disc ml-5 mt-2">
-                            {block.data.items.map((item, itemIndex) => (
-                              <li key={itemIndex} className="text-gray-700">
-                                {item}
-                              </li>
-                            ))}
-                          </ul>
-                        );
-                      default:
-                        return null;
-                    }
-                  })}
+                  <div className="mt-2">
+                    {blog.content.map((block) => {
+                      switch (block.type) {
+                        case "paragraph":
+                          return (
+                            <p key={block.id} className="text-gray-700">
+                              {block.data.text}
+                            </p>
+                          );
+                        case "image":
+                          return (
+                            <img
+                              key={block.id}
+                              src={block.data.file.url}
+                              alt={block.data.caption || "Blog Image"}
+                              className="w-full h-auto mt-2 rounded-md"
+                            />
+                          );
+                        case "header":
+                          return (
+                            <h2
+                              key={block.id}
+                              className="text-xl font-semibold mt-2"
+                            >
+                              {block.data.text}
+                            </h2>
+                          );
+                        case "list":
+                          return (
+                            <ul key={block.id} className="list-disc ml-5 mt-2">
+                              {block.data.items.map((item, itemIndex) => (
+                                <li key={itemIndex} className="text-gray-700">
+                                  {item}
+                                </li>
+                              ))}
+                            </ul>
+                          );
+                        default:
+                          return null;
+                      }
+                    })}
+                  </div>
+
+                  {blog.video && (
+                    <video
+                      src={blog.video}
+                      controls
+                      className="w-full h-auto mt-4 mb-2 rounded-lg"
+                    >
+                      Your browser does not support the video tag.
+                    </video>
+                  )}
+
+                  <p className="mt-2">
+                    <strong>Location:</strong>{" "}
+                    {blog.location ? blog.location : "Location not available"}
+                  </p>
                 </div>
-
-                {blog.video && (
-                  <video
-                    src={blog.video}
-                    controls
-                    className="w-full h-auto mt-4 mb-2 rounded-lg"
-                  >
-                    Your browser does not support the video tag.
-                  </video>
-                )}
-
-                <p className="mt-2">
-                  <strong>Location:</strong>{" "}
-                  {blog.location ? blog.location : "Location not available"}
-                </p>
-              </div>
-            );
-          })
+              );
+            })
+            .reverse()
         ) : (
           <p className="text-center text-gray-500">No blogs found.</p>
         )}

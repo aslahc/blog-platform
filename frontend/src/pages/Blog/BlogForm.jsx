@@ -6,10 +6,11 @@ import Header from "@editorjs/header";
 import ImageTool from "@editorjs/image";
 import List from "@editorjs/list";
 import { useNavigate } from "react-router-dom";
-
+import axiosInstance from "../../axios/axios";
 const BlogForm = () => {
   const [title, setTitle] = useState("");
   const [imageFile, setImageFile] = useState(null); // Store image file
+  console.log(setImageFile);
   const [videoFile, setVideoFile] = useState(null); // Store video file
   const [location, setLocation] = useState(null); // Store location data
   const [locationName, setLocationName] = useState(""); // Store location name
@@ -216,12 +217,9 @@ const BlogForm = () => {
       //   newBlog
       // );
 
-      const paymentResponse = await axios.post(
-        "http://localhost:5000/api/blogs/checkout",
-        {
-          amount: 100, // Adjust the amount as needed
-        }
-      );
+      const paymentResponse = await axiosInstance.post("/api/blogs/checkout", {
+        amount: 100, // Adjust the amount as needed
+      });
 
       const orderId = paymentResponse.data.orderId;
 
@@ -240,12 +238,9 @@ const BlogForm = () => {
 
           console.log("before saving the data ", newBlog);
 
-          const blogResponse = await axios.post(
-            "http://localhost:5000/api/blogs",
-            newBlog
-          );
+          const blogResponse = await axiosInstance.post("/api/blogs", newBlog);
           console.log("Blog created:", blogResponse.data);
-          navigate("/blogfeed");
+          navigate("/");
         },
         prefill: {
           name: "John Doe",

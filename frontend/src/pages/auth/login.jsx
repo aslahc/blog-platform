@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { login } from "../../utils/auth";
+import { login } from "../../axios/axios";
 import { useNavigate, Link } from "react-router-dom"; // Import Link for navigation
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../../redux/store/authSlice"; // Import the loginSuccess action
@@ -28,17 +28,25 @@ const Login = () => {
 
     try {
       const data = await login({ email, password });
-      localStorage.setItem("token", data.token);
-      console.log(data, "after loging");
-      // Dispatch the user data to Redux store
-      dispatch(
-        loginSuccess({
-          user: data.user, // Assuming 'user' comes from your backend response
-          token: data.token,
-        })
-      );
+      if (data?.token) {
+        console.log("Login successful, token received:", data.token);
+        localStorage.setItem("token", data.token);
 
-      navigate("/blogfeed");
+        // Dispatch the user data to Redux store
+        dispatch(
+          loginSuccess({
+            user: data.user, // Assuming 'user' comes from your backend response
+            token: data.token,
+          })
+        );
+
+        // Wait a moment before redirecting to ensure token is saved
+        setTimeout(() => {
+          navigate("/");
+        }, 100); // You can try adjusting the timeout or remove it if not needed
+      } else {
+        setError("Failed to get token from server.");
+      }
     } catch (error) {
       console.error(error);
       alert("Login failed!");
