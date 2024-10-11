@@ -4,7 +4,9 @@ const API_URL = "https://blog.aslah.online/"; // Set your base URL here
 const axiosInstance = axios.create({ baseURL: API_URL });
 // Register user
 export const signup = async (userData) => {
+  console.log("going to singup");
   const response = await axios.post(`${API_URL}/api/auth/signup`, userData);
+  console.log("get a resposne ", response);
   return response.data;
 };
 
