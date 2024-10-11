@@ -45,14 +45,17 @@ exports.signup = async (req, res) => {
 
 // Login user
 exports.login = async (req, res) => {
+  console.log("enter to hererererere");
   const { email, password } = req.body;
-
+  console.log(req.body);
   try {
     const user = await User.findOne({ email });
+    console.log("check user", user);
     if (!user || user.password !== password) {
+      console.log("entering to this pasowrd");
       return res.status(400).json({ msg: "Invalid credentials" });
     }
-
+    console.log("token");
     // Generate JWT
     const token = jwt.sign(
       { userId: user._id },
@@ -61,7 +64,7 @@ exports.login = async (req, res) => {
         expiresIn: "1h",
       }
     );
-
+    console.log("ere", token);
     res.json({
       token,
       user: {
