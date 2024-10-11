@@ -1,31 +1,39 @@
 const User = require("../models/User");
-const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 // Signup user
 exports.signup = async (req, res) => {
   const { name, email, password } = req.body;
-  console.log("enterd to signup");
+  console.log("entered to signup");
+
   try {
     // Check if user exists
     let user = await User.findOne({ email });
     if (user) {
       return res.status(400).json({ msg: "User already exists" });
     }
-    console.log("checkinguser");
-    // Create a new user
+
+    console.log(process.env.JWT_SECRET);
+    console.log("checking user");
+
+    // Create a new user without password hashing
     user = new User({
       name,
       email,
-      password: await bcrypt.hash(password, 10), // hash the password
+      password, // No hash, just storing plain password (NOT recommended for production)
     });
 
     await user.save();
-    console.log("user savedd......");
+    console.log("user saved......");
+
     // Generate JWT
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      { userId: user._id },
+      process.env.JWT_SECRET || "Secretjwt",
+      {
+        expiresIn: "1h",
+      }
+    );
 
     res.status(201).json({ token });
   } catch (err) {
@@ -40,20 +48,18 @@ exports.login = async (req, res) => {
 
   try {
     const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ msg: "Invalid credentials" });
-    }
-
-    // Check password
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
+    if (!user || user.password !== password) {
       return res.status(400).json({ msg: "Invalid credentials" });
     }
 
     // Generate JWT
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      { userId: user._id },
+      process.env.JWT_SECRET || "Secretjwt",
+      {
+        expiresIn: "1h",
+      }
+    );
 
     res.json({
       token,
@@ -69,11 +75,12 @@ exports.login = async (req, res) => {
   }
 };
 
+// Get all users
 exports.getAllUsers = async (req, res) => {
   try {
-    console.log("enter to fetch uall auser ");
+    console.log("enter to fetch all users ");
     const users = await User.find({}, "id name email");
-    console.log("get all user", users);
+    console.log("get all users", users);
     res.status(200).json(users);
   } catch (error) {
     console.error(error.message);
