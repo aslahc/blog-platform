@@ -41,7 +41,7 @@ const Signup = () => {
       navigate("/login"); // Redirect to the login page after signup
     } catch (error) {
       console.error(error);
-      setError("email alredy exist");
+      setError("there is a error ");
       // alert("Signup failed!");
     }
   };
