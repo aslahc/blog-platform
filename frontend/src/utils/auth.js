@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/"; // Change to your backend URL
+const API_URL = "https://blog.aslah.online/"; // Change to your backend URL
 
 // Register user
 export const signup = async (userData) => {

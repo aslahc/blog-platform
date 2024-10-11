@@ -34,6 +34,7 @@ const Signup = () => {
     }
 
     try {
+      console.log("p");
       const data = await signup({ name, email, password });
       console.log(data);
       localStorage.setItem("token", data.token);
