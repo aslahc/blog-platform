@@ -3,7 +3,7 @@
 - [blog site](https://blogg-app-xi.vercel.app/)
 
 ## YouTube Video Link
-- [YouTube Walkthrough](https://youtu.be/JVRwSUECjbg)
+- [YouTube Walkthrough]([https://youtu.be/JVRwSUECjbg](https://youtu.be/918Tctvg_rA))
 
 ## Objective
 
