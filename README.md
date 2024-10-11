@@ -1,6 +1,6 @@
 # Blog  APP
 ## Live url Link
-- [Product Inventory API](https://blogg-app-xi.vercel.app/)
+- [blog site](https://blogg-app-xi.vercel.app/)
 
 ## YouTube Video Link
 - [YouTube Walkthrough](https://youtu.be/JVRwSUECjbg)
