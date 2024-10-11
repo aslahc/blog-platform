@@ -10,7 +10,9 @@ createRoot(document.getElementById("root")).render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
       <StrictMode>
-        <App />
+        <div className="min-h-screen bg-offwhite">
+          <App />
+        </div>
       </StrictMode>
     </PersistGate>
   </Provider>

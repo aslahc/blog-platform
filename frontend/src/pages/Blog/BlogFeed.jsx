@@ -76,108 +76,145 @@ const BlogFeed = () => {
   const filteredBlogs = selectedLocation
     ? blogs.filter((blog) => blog.location === selectedLocation)
     : blogs;
-
+  const getStateFromLocation = (location) => {
+    if (!location) return ""; // return an empty string if no location is provided
+    const parts = location.split(","); // split location by commas
+    const state = parts.length > 1 ? parts[parts.length - 2].trim() : ""; // Get second-to-last part (e.g., "Kerala")
+    return state;
+  };
   return (
     <div className="max-w-4xl mx-auto p-5">
-      <h1 className="text-3xl font-bold text-center mb-6">My Blog</h1>
+      {/* Header */}
 
-      <button
-        className="bg-red-500 text-white font-semibold py-2 px-4 rounded-lg mb-5 hover:bg-red-600 transition"
-        onClick={handleCreateBlog}
-      >
-        Create a Blog
-      </button>
-      <button
-        className="bg-red-500 p-3 rounded-lg"
-        onClick={() => {
-          handleLogout();
-        }}
-      >
-        logout
-      </button>
-      {/* Location Filter Dropdown */}
-      <div className="mb-5">
-        <label className="block text-gray-700 mb-2" htmlFor="location-filter">
-          Filter by Location:
-        </label>
-        <select
-          id="location-filter"
-          className="border rounded-lg py-2 px-3 w-full"
-          value={selectedLocation}
-          onChange={(e) => setSelectedLocation(e.target.value)}
-        >
-          <option value="">All Locations</option>
-          {/* Here you can dynamically generate options based on available locations */}
-          {Array.from(new Set(blogs.map((blog) => blog.location))) // Get unique locations
-            .map((location, index) => (
-              <option key={index} value={location}>
-                {location}
-              </option>
-            ))}
-        </select>
+      {/* Navbar Container */}
+      <div className="flex flex-col sm:flex-row m-4 justify-between items-center mb-6 space-y-4 sm:space-y-0 w-full max-w-4xl">
+        <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 w-full">
+          <button
+            className="bg-black text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300 ease-in-out shadow-md w-full sm:w-auto"
+            onClick={handleCreateBlog}
+          >
+            Create a Blog
+          </button>
+
+          <div className="w-full sm:w-auto">
+            <select
+              id="location-filter"
+              className="border border-gray-300 rounded-lg py-2 px-3 text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full"
+              value={selectedLocation}
+              onChange={(e) => setSelectedLocation(e.target.value)}
+            >
+              <option value="">All Locations</option>
+              {Array.from(new Set(blogs.map((blog) => blog.location))) // Get unique locations
+                .map((location, index) => (
+                  <option key={index} value={location}>
+                    {location}
+                  </option>
+                ))}
+            </select>
+          </div>
+        </div>
+
+        {/* Logout Button */}
+        {user ? (
+          <button
+            className="bg-black text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-600 transition duration-300 ease-in-out shadow-md w-full sm:w-auto mt-4 sm:mt-0"
+            onClick={handleLogout}
+          >
+            Logout
+          </button>
+        ) : (
+          <button className="bg-black text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-600 transition duration-300 ease-in-out shadow-md w-full sm:w-auto mt-4 sm:mt-0">
+            login/signup
+          </button>
+        )}
       </div>
 
-      {loading && <p className="text-center text-gray-500">Loading blogs...</p>}
-      {error && <p className="text-red-500 text-center">{error}</p>}
+      {loading && (
+        <p className="text-center text-gray-500 mt-4">Loading blogs...</p>
+      )}
+      {error && <p className="text-center text-red-500 mt-4">{error}</p>}
 
       <h2 className="text-2xl font-semibold my-4">All Blogs</h2>
 
-      <div className="space-y-4">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {filteredBlogs.length > 0 ? (
           filteredBlogs
             .map((blog, index) => {
               const author = users.find((user) => user._id === blog.author._id);
-              console.log("[", user?._id, "[][]", blog.author._id);
               const isAuthor = userData === blog.author._id;
-              console.log(isAuthor);
               return (
-                <div
+                <article
                   key={blog._id || index}
-                  className="border rounded-lg shadow-md p-4 bg-gray-50"
+                  className="py-12 border-b border-gray-200 last:border-b-0 transition-transform duration-300 ease-in-out transform  hover:scale-105"
                 >
-                  <h1 className="text-gray-600">
-                    {author ? author.name : "Unknown Author"}
-                  </h1>
-                  {isAuthor && (
-                    <button
-                      onClick={() => handleEdit(blog._id)}
-                      className="bg-blue-500 text-white py-2 px-4 rounded-lg mt-2 hover:bg-blue-600"
-                    >
-                      Edit Post
-                    </button>
-                  )}
-                  <h3 className="text-xl font-bold">{blog.title}</h3>
+                  <header className="mb-8">
+                    <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2 hover:text-gray-600 transition-colors duration-300">
+                      {blog.title}
+                    </h2>
+                    <div className="flex items-center justify-between text-sm text-gray-500">
+                      <div className="flex items-center">
+                        <span className="font-medium text-blue-500 mr-2">
+                          {author ? author.name : "Unknown Author"}
+                        </span>
+                        {blog.location && (
+                          <span className="before:content-['•'] before:mx-2">
+                            {getStateFromLocation(blog.location)}
+                          </span>
+                        )}
+                      </div>
+                      {isAuthor && (
+                        <button
+                          onClick={() => handleEdit(blog._id)}
+                          className="text-blue-600 hover:text-blue-800 transition-colors duration-200"
+                        >
+                          Edit Post
+                        </button>
+                      )}
+                    </div>
+                  </header>
 
-                  <div className="mt-2">
+                  <div className="prose prose-lg max-w-none">
                     {blog.content.map((block) => {
                       switch (block.type) {
                         case "paragraph":
                           return (
-                            <p key={block.id} className="text-gray-700">
+                            <p
+                              key={block.id}
+                              className="mb-4 text-gray-700 leading-relaxed"
+                            >
                               {block.data.text}
                             </p>
                           );
                         case "image":
                           return (
-                            <img
-                              key={block.id}
-                              src={block.data.file.url}
-                              alt={block.data.caption || "Blog Image"}
-                              className="w-full h-auto mt-2 rounded-md"
-                            />
+                            <figure key={block.id} className="my-8">
+                              <img
+                                src={block.data.file.url}
+                                alt={block.data.caption || "Blog Image"}
+                                className="w-full h-auto rounded-lg shadow-md"
+                              />
+                              {block.data.caption && (
+                                <figcaption className="mt-2 text-center text-sm text-gray-500">
+                                  {block.data.caption}
+                                </figcaption>
+                              )}
+                            </figure>
                           );
                         case "header":
                           return (
-                            <h2
+                            <h3
                               key={block.id}
-                              className="text-xl font-semibold mt-2"
+                              className="text-2xl font-semibold text-gray-900 mt-8 mb-4"
                             >
                               {block.data.text}
-                            </h2>
+                            </h3>
                           );
                         case "list":
                           return (
-                            <ul key={block.id} className="list-disc ml-5 mt-2">
+                            <ul
+                              key={block.id}
+                              className="list-disc pl-5 space-y-2 mb-4"
+                            >
                               {block.data.items.map((item, itemIndex) => (
                                 <li key={itemIndex} className="text-gray-700">
                                   {item}
@@ -192,25 +229,22 @@ const BlogFeed = () => {
                   </div>
 
                   {blog.video && (
-                    <video
-                      src={blog.video}
-                      controls
-                      className="w-full h-auto mt-4 mb-2 rounded-lg"
-                    >
-                      Your browser does not support the video tag.
-                    </video>
+                    <div className="my-8">
+                      <video
+                        src={blog.video}
+                        controls
+                        className="w-full h-auto rounded-lg shadow-md"
+                      >
+                        Your browser does not support the video tag.
+                      </video>
+                    </div>
                   )}
-
-                  <p className="mt-2">
-                    <strong>Location:</strong>{" "}
-                    {blog.location ? blog.location : "Location not available"}
-                  </p>
-                </div>
+                </article>
               );
             })
             .reverse()
         ) : (
-          <p className="text-center text-gray-500">No blogs found.</p>
+          <p className="text-center text-gray-500 py-12">No blogs found.</p>
         )}
       </div>
     </div>

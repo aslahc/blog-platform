@@ -14,7 +14,7 @@ export const signup = async (userData) => {
 export const login = async (userData) => {
   console.log(userData);
   const response = await axiosInstance.post(
-    "https://blog.aslah.online/api/auth/login",
+    "https://blog.aslah.online/",
     userData
   );
   return response.data;

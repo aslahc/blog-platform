@@ -14,7 +14,6 @@ const EditBlogForm = () => {
   const navigate = useNavigate();
   const { blog } = location.state; // Get the blog passed from BlogFeed
   const [title, setTitle] = useState(blog.title);
-  const [imageFile, setImageFile] = useState(null);
   const [videoFile, setVideoFile] = useState(null);
   const [locationName, setLocationName] = useState(blog.location);
   console.log(setLocationName);
@@ -133,11 +132,6 @@ const EditBlogForm = () => {
         return;
       }
 
-      let imageUrl = null;
-      if (imageFile) {
-        imageUrl = await uploadToCloudinary(imageFile, "image");
-      }
-
       let videoUrl = null;
       if (videoFile) {
         videoUrl = await uploadToCloudinary(videoFile, "video");
@@ -147,7 +141,6 @@ const EditBlogForm = () => {
         title,
         content: savedData.blocks,
         location: locationName || "Location not available",
-        image: imageUrl,
         video: videoUrl,
       };
 
@@ -182,17 +175,6 @@ const EditBlogForm = () => {
 
         {/* Image and Video Upload */}
         <div className="flex space-x-4">
-          <div className="flex-1">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Upload Image
-            </label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => setImageFile(e.target.files[0])}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
-            />
-          </div>
           <div className="flex-1">
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Upload Video

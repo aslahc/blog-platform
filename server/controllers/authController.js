@@ -53,7 +53,9 @@ exports.login = async (req, res) => {
     console.log("check user", user);
     if (!user || user.password !== password) {
       console.log("entering to this pasowrd");
-      return res.status(400).json({ msg: "Invalid credentials" });
+      return res
+        .status(400)
+        .json({ msg: "Invalid credentials check email or password" });
     }
     console.log("token");
     // Generate JWT
