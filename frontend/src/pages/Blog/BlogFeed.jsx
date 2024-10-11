@@ -24,7 +24,8 @@ const BlogFeed = () => {
   console.log("111", blogs);
   const { user } = useSelector((state) => state.auth);
   console.log("Auth State:", user);
-  const userData = user.id;
+  const userData = user ? user.id : null;
+
   // State for selected location
   const [selectedLocation, setSelectedLocation] = useState("");
 
