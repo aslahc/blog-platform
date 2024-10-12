@@ -7,9 +7,9 @@ import List from "@editorjs/list";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../axios/axios";
 import useLocation from "../../hooks/useLocation";
-import useCloudinary from "../../hooks/useCloudinary"; // Import your custom hook
-
+import useCloudinary from "../../hooks/useCloudinary";
 const BlogForm = () => {
+  // States for blog title, video file, and Editor.js instance
   const [title, setTitle] = useState("");
   const [videoFile, setVideoFile] = useState(null);
   const editorInstance = useRef(null);
@@ -32,7 +32,7 @@ const BlogForm = () => {
       }
     };
   }, []);
-
+  // Function to initialize Editor.js with tools and configuration
   const initializeEditor = () => {
     const editor = new EditorJS({
       holder: "editorjs",
@@ -63,20 +63,17 @@ const BlogForm = () => {
           },
         },
       },
-      onChange: () => {
-        console.log("Editor content changed");
-      },
+      onChange: () => {},
       onReady: () => {
         editorInstance.current = editor;
       },
     });
   };
-
+  // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!editorInstance.current) {
-      console.error("Editor.js instance is not initialized");
       return;
     }
 

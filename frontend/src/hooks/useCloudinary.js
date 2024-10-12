@@ -5,11 +5,11 @@ const useCloudinary = () => {
   const [error, setError] = useState(null);
   const presetKey = "cloudinaryimg"; // Your upload preset
   const cloudName = "dy9ofwwjp"; // Your Cloudinary cloud name
-
+  // Function to upload files to Cloudinary
   const uploadToCloudinary = async (file, resourceType = "image") => {
     setUploading(true);
     setError(null);
-
+    // Prepare the form data with the file and upload preset
     const formData = new FormData();
     formData.append("file", file);
     formData.append("upload_preset", presetKey);
@@ -29,14 +29,14 @@ const useCloudinary = () => {
 
       const data = await response.json();
       setUploading(false);
-      return data.secure_url; // Return the secure URL of the uploaded file
+      return data.secure_url;
     } catch (error) {
       setError(error.message);
       setUploading(false);
       return null;
     }
   };
-
+  // Return the upload function, uploading state, and any error messages
   return {
     uploadToCloudinary,
     uploading,

@@ -6,11 +6,9 @@ import ImageTool from "@editorjs/image";
 import List from "@editorjs/list";
 import { useSelector } from "react-redux";
 import axiosInstance from "../../axios/axios";
-import useCloudinary from "../../hooks/useCloudinary"; // Import your custom hook
+import useCloudinary from "../../hooks/useCloudinary";
 
 const EditBlogForm = () => {
-  const presetKey = "cloudinaryimg";
-  const cloudName = "dy9ofwwjp";
   const location = useLocation();
   const navigate = useNavigate();
   const { blog } = location.state;
@@ -19,7 +17,7 @@ const EditBlogForm = () => {
   const [locationName, setLocationName] = useState(blog.location);
   console.log(setLocationName);
   const editorInstance = useRef(null);
-  const { uploadToCloudinary, uploading, error } = useCloudinary(); // Destructure hook values
+  const { uploadToCloudinary } = useCloudinary();
 
   const user = useSelector((state) => state.auth.user);
   console.log(user);

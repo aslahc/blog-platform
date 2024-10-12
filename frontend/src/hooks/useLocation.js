@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
+// this is the hooks for to get the current user location
 const useLocation = () => {
   const [location, setLocation] = useState(null);
   const [locationName, setLocationName] = useState("");

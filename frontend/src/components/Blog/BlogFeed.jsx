@@ -13,7 +13,7 @@ import {
 } from "../../redux/store/blogsSlice";
 import { logout } from "../../redux/store/authSlice";
 import axiosInstance from "../../axios/axios";
-
+// this is the home page here is showing the blogg feed
 const BlogFeed = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();

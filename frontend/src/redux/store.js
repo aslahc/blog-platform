@@ -11,12 +11,12 @@ const persistConfig = {
 };
 
 const persistedAuthReducer = persistReducer(persistConfig, authReducer);
-
+// store
 const store = configureStore({
   reducer: {
-    auth: persistedAuthReducer,
-    users: usersReducer,
-    blogs: blogReducer, // Add blog reducer
+    auth: persistedAuthReducer, //auth user
+    users: usersReducer, // for all users data
+    blogs: blogReducer, // blog related users
   },
 });
 

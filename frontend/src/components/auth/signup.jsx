@@ -3,12 +3,14 @@ import { signup } from "../../utils/auth";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 const Signup = () => {
+  // states to manage the datas
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  // function to handle the submition of the signup details
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");

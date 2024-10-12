@@ -5,12 +5,14 @@ import { useDispatch } from "react-redux";
 import { loginSuccess } from "../../redux/store/authSlice";
 
 const Login = () => {
+  //
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const dispatch = useDispatch(); // Initialize the dispatch hook
+  const dispatch = useDispatch();
 
+  // function to handle the submision and validation
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -28,7 +30,6 @@ const Login = () => {
     try {
       const data = await login({ email, password });
       if (data?.token) {
-        console.log("Login successful, token received:", data.token);
         localStorage.setItem("token", data.token);
 
         // Dispatch the user data to Redux store
@@ -47,7 +48,6 @@ const Login = () => {
         setError("Failed to get token from server.");
       }
     } catch (error) {
-      console.error(error);
       // Check if the error response has a message
       if (error.response && error.response.data && error.response.data.msg) {
         setError(error.response.data.msg); // Set the error message from the response

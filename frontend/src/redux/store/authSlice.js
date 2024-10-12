@@ -5,6 +5,7 @@ const initialState = {
   token: null,
 };
 
+// this is the slice for auth login user
 const authSlice = createSlice({
   name: "auth",
   initialState,

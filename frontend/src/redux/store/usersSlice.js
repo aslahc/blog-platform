@@ -5,7 +5,7 @@ const initialState = {
   loading: false,
   error: null,
 };
-
+// this is the slice for manage all users data
 const usersSlice = createSlice({
   name: "users",
   initialState,

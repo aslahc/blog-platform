@@ -5,7 +5,7 @@ const initialState = {
   loading: false,
   error: null,
 };
-
+// this is the silice for blog realted datas
 const blogsSlice = createSlice({
   name: "blogs",
   initialState,

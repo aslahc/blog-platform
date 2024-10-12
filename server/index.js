@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
-const connectDB = require("./config/db");
+const connectDB = require("./config/db"); //mongodb conection file
 
 // Load environment variables
 dotenv.config();
@@ -18,11 +18,13 @@ const corsOptions = {
   credentials: true,
 };
 
+//middlewares
 app.use(cors(corsOptions));
 app.use(express.json());
 
 // Routes
 app.use("/api/auth", require("./routes/auth"));
+//blog related routes
 app.use("/api/blogs", require("./routes/blogs"));
 
 // Start the server
