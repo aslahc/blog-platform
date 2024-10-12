@@ -4,9 +4,6 @@ const jwt = require("jsonwebtoken");
 // Signup user
 exports.signup = async (req, res) => {
   const { name, email, password } = req.body;
-  console.log(name, email, password);
-  console.log("entered to signup");
-
   try {
     // Check if user exists
     let user = await User.findOne({ email });
@@ -14,14 +11,10 @@ exports.signup = async (req, res) => {
       return res.status(400).json({ msg: "User already exists" });
     }
 
-    console.log(process.env.JWT_SECRET);
-    console.log("checking user");
-
-    // Create a new user without password hashing
     user = new User({
       name,
       email,
-      password, // No hash, just storing plain password (NOT recommended for production)
+      password,
     });
 
     await user.save();
@@ -45,20 +38,14 @@ exports.signup = async (req, res) => {
 
 // Login user
 exports.login = async (req, res) => {
-  console.log("enter to hererererere");
   const { email, password } = req.body;
-  console.log(req.body);
   try {
     const user = await User.findOne({ email });
-    console.log("check user", user);
     if (!user || user.password !== password) {
-      console.log("entering to this pasowrd");
       return res
         .status(400)
         .json({ msg: "Invalid credentials check email or password" });
     }
-    console.log("token");
-    // Generate JWT
     const token = jwt.sign(
       { userId: user._id },
       process.env.JWT_SECRET || "Secretjwt",
@@ -66,7 +53,6 @@ exports.login = async (req, res) => {
         expiresIn: "1h",
       }
     );
-    console.log("ere", token);
     res.json({
       token,
       user: {
@@ -81,7 +67,7 @@ exports.login = async (req, res) => {
   }
 };
 
-// Get all users
+// controler for retriev all users
 exports.getAllUsers = async (req, res) => {
   try {
     console.log("enter to fetch all users ");

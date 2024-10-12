@@ -1,10 +1,11 @@
 const jwt = require("jsonwebtoken");
 
+//this is the middleware for authanticate
+
 const authMiddleware = (req, res, next) => {
   console.log("Checking Authorization...");
 
-  // Extract token from Authorization header (assuming it's in the format 'Bearer <token>')
-  const token = req.header("Authorization")?.split(" ")[1]; // Get the token after "Bearer "
+  const token = req.header("Authorization")?.split(" ")[1];
 
   console.log(token, "from header");
 
@@ -14,8 +15,8 @@ const authMiddleware = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded.userId; // Add the decoded user ID to the request object
-    next(); // Proceed to the next middleware/route handler
+    req.user = decoded.userId;
+    next();
   } catch (err) {
     console.error("Token verification failed:", err);
     res.status(401).json({ msg: "Token is not valid" });

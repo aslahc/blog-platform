@@ -13,9 +13,9 @@ const app = express();
 connectDB();
 
 const corsOptions = {
-  origin: "*", // The frontend origin that should be allowed
-  methods: "GET,POST,PUT,DELETE", // Specify which HTTP methods are allowed
-  credentials: true, // Enable cookies if needed
+  origin: "*",
+  methods: "GET,POST,PUT,DELETE",
+  credentials: true,
 };
 
 app.use(cors(corsOptions));

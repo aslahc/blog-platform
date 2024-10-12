@@ -1,33 +1,29 @@
 import { useState } from "react";
 import { signup } from "../../utils/auth";
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom"; // Import Link for navigation
-
+import { Link } from "react-router-dom";
 const Signup = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate(); // Initialize the navigation hook
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); // Clear previous errors
+    setError("");
 
-    // Validate name
     if (!name) {
       setError("Name is required.");
       return;
     }
 
-    // Basic email validation
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(email)) {
       setError("Please enter a valid email address.");
       return;
     }
 
-    // Basic password validation
     if (password.length < 6) {
       setError("Password must be at least 6 characters long.");
       return;
@@ -38,11 +34,10 @@ const Signup = () => {
       const data = await signup({ name, email, password });
       console.log(data);
       localStorage.setItem("token", data.token);
-      navigate("/login"); // Redirect to the login page after signup
+      navigate("/login");
     } catch (error) {
       console.error(error);
       setError("there is a error ");
-      // alert("Signup failed!");
     }
   };
 

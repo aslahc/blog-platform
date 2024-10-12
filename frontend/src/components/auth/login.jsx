@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { login } from "../../axios/axios";
-import { useNavigate, Link } from "react-router-dom"; // Import Link for navigation
+import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { loginSuccess } from "../../redux/store/authSlice"; // Import the loginSuccess action
+import { loginSuccess } from "../../redux/store/authSlice";
 
 const Login = () => {
   const [email, setEmail] = useState("");

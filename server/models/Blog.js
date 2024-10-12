@@ -8,7 +8,7 @@ const blockSchema = new mongoose.Schema({
   },
   data: {
     type: Object,
-    required: true, // Data associated with the block (content, image URL, etc.)
+    required: true,
   },
 });
 
@@ -25,24 +25,23 @@ const blogSchema = new mongoose.Schema({
   location: {
     type: String, // Location based on user's IP
     required: true,
-    // default: "india road, delhi, city - 680208, delhi, India",
   },
   author: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User", // Reference to the User schema
+    ref: "User",
     required: true,
   },
   image: {
-    type: String, // Location based on user's IP
+    type: String,
     required: false,
   },
   video: {
-    type: String, // Location based on user's IP
+    type: String,
     required: false,
   },
   isPublished: {
     type: Boolean,
-    default: false, // Blogs are not published until payment is confirmed
+    default: false,
   },
   createdAt: {
     type: Date,

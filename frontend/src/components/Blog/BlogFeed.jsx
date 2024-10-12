@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react"; // Import useState
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchUsersStart,
   fetchUsersSuccess,
   fetchUsersFailure,
-} from "../../redux/store/usersSlice"; // Import the users actions
+} from "../../redux/store/usersSlice";
 import {
   fetchBlogsStart,
   fetchBlogsSuccess,
@@ -21,11 +21,8 @@ const BlogFeed = () => {
   // Select users and loading/error state from Redux store
   const { users, loading, error } = useSelector((state) => state.users);
   const { blogs } = useSelector((state) => state.blogs);
-  console.log("111", blogs);
   const { user } = useSelector((state) => state.auth);
-  console.log("Auth State:", user);
   const userData = user ? user.id : null;
-
   // State for selected location
   const [selectedLocation, setSelectedLocation] = useState("");
 
@@ -77,9 +74,9 @@ const BlogFeed = () => {
     ? blogs.filter((blog) => blog.location === selectedLocation)
     : blogs;
   const getStateFromLocation = (location) => {
-    if (!location) return ""; // return an empty string if no location is provided
-    const parts = location.split(","); // split location by commas
-    const state = parts.length > 1 ? parts[parts.length - 2].trim() : ""; // Get second-to-last part (e.g., "Kerala")
+    if (!location) return "";
+    const parts = location.split(",");
+    const state = parts.length > 1 ? parts[parts.length - 2].trim() : "";
     return state;
   };
   return (

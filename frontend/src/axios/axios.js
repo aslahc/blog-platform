@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "https://blog.aslah.online/"; // Set your base URL here
+const API_URL = "https://blog.aslah.online/";
 const axiosInstance = axios.create({ baseURL: API_URL });
 // Register user
 export const signup = async (userData) => {
