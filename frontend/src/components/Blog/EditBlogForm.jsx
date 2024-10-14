@@ -7,6 +7,7 @@ import List from "@editorjs/list";
 import { useSelector } from "react-redux";
 import axiosInstance from "../../axios/axios";
 import useCloudinary from "../../hooks/useCloudinary";
+// this is the componenet fro edit the blog post 
 
 const EditBlogForm = () => {
   const location = useLocation();
@@ -33,7 +34,7 @@ const EditBlogForm = () => {
       }
     };
   }, []);
-
+// it is for intialize the editor 
   const initializeEditor = () => {
     const editor = new EditorJS({
       holder: "editorjs",

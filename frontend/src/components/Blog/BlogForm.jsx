@@ -18,7 +18,7 @@ const BlogForm = () => {
   const { locationName } = useLocation();
 
   const { uploadToCloudinary, uploading, error } = useCloudinary(); // Destructure hook values
-
+  // useeffect to render the editor 
   useEffect(() => {
     initializeEditor();
 

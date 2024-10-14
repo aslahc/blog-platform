@@ -8,7 +8,7 @@ const getGeoLocation = async (req, res, next) => {
     next();
   } catch (error) {
     console.error(error);
-    req.geo = { countryCode: "US" }; // Default to US if geo fails
+    req.geo = { countryCode: "US" };
     next();
   }
 };

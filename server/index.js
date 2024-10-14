@@ -1,15 +1,15 @@
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
-const connectDB = require("./config/db"); //mongodb conection file
+const connectDB = require("./config/db"); //mongo conction file
 
-// Load environment variables
+//  environment variables
 dotenv.config();
 
 // Initialize express app
 const app = express();
 
-// Connect to MongoDB
+// Connect to MongodB
 connectDB();
 
 const corsOptions = {

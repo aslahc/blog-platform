@@ -1,22 +1,16 @@
 import axios from "axios";
 
-const API_URL = "https://blog.aslah.online/";
+const API_URL = "http://localhost:5000/";
 const axiosInstance = axios.create({ baseURL: API_URL });
 // Register user
 export const signup = async (userData) => {
-  const response = await axiosInstance.post(
-    "https://blog.aslah.online/api/auth/signup",
-    userData
-  );
+  const response = await axiosInstance.post("/api/auth/signup", userData);
   return response.data;
 };
 
 // Login user
 export const login = async (userData) => {
-  const response = await axiosInstance.post(
-    "https://blog.aslah.online/api/auth/login",
-    userData
-  );
+  const response = await axiosInstance.post("/api/auth/login", userData);
   return response.data;
 };
 

@@ -20,16 +20,7 @@ exports.signup = async (req, res) => {
     await user.save();
     console.log("user saved......");
 
-    // Generate JWT
-    const token = jwt.sign(
-      { userId: user._id },
-      process.env.JWT_SECRET || "Secretjwt",
-      {
-        expiresIn: "1h",
-      }
-    );
-
-    res.status(201).json({ token });
+    res.status(201).json({ status: true });
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");
@@ -50,7 +41,7 @@ exports.login = async (req, res) => {
       { userId: user._id },
       process.env.JWT_SECRET || "Secretjwt",
       {
-        expiresIn: "1h",
+        expiresIn: "90h",
       }
     );
     res.json({

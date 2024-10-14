@@ -8,12 +8,12 @@ const blogController = require("../controllers/blogController");
 router.get("/", blogController.getAllBlogs);
 
 // Route to create a new blog (protected with authMiddleware)
-router.post("/", authMiddleware, blogController.createBlog);
+router.post("/", blogController.createBlog);
 
 // Route to update a blog (protected with authMiddleware)
-router.put("/:id", authMiddleware, blogController.updateBlog);
+router.put("/:id", blogController.updateBlog);
 
 // Route for Razorpay checkout (protected with authMiddleware)
-router.post("/checkout", authMiddleware, blogController.createCheckout);
+router.post("/checkout", blogController.createCheckout);
 
 module.exports = router;

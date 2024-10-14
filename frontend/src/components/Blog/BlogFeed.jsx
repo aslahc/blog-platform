@@ -13,6 +13,9 @@ import {
 } from "../../redux/store/blogsSlice";
 import { logout } from "../../redux/store/authSlice";
 import axiosInstance from "../../axios/axios";
+import CreateBlogButton from "./CreateBlogButton";
+import LocationFilter from "./LocationFilter";
+import Loading from "./Loading";
 // this is the home page here is showing the blogg feed
 const BlogFeed = () => {
   const navigate = useNavigate();
@@ -84,30 +87,16 @@ const BlogFeed = () => {
       {/* Header */}
 
       {/* Navbar Container */}
-      <div className="flex flex-col sm:flex-row m-4 justify-between items-center mb-6 space-y-4 sm:space-y-0 w-full max-w-4xl">
+      <div className="flex flex-col sm:flex-row  justify-between items-center mb-6 space-y-4 sm:space-y-0 w-full max-w-4xl">
         <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 w-full">
-          <button
-            className="bg-black text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300 ease-in-out shadow-md w-full sm:w-auto"
-            onClick={handleCreateBlog}
-          >
-            Create a Blog
-          </button>
+          <CreateBlogButton onClick={handleCreateBlog} />
 
           <div className="w-full sm:w-auto">
-            <select
-              id="location-filter"
-              className="border border-gray-300 rounded-lg py-2 px-3 text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full"
-              value={selectedLocation}
-              onChange={(e) => setSelectedLocation(e.target.value)}
-            >
-              <option value="">All Locations</option>
-              {Array.from(new Set(blogs.map((blog) => blog.location))) // Get unique locations
-                .map((location, index) => (
-                  <option key={index} value={location}>
-                    {location}
-                  </option>
-                ))}
-            </select>
+            <LocationFilter
+              blogs={blogs}
+              selectedLocation={selectedLocation}
+              onChange={setSelectedLocation}
+            />
           </div>
         </div>
 
@@ -129,9 +118,7 @@ const BlogFeed = () => {
         )}
       </div>
 
-      {loading && (
-        <p className="text-center text-gray-500 mt-4">Loading blogs...</p>
-      )}
+      {loading && <Loading />}
       {error && <p className="text-center text-red-500 mt-4">{error}</p>}
 
       <h2 className="text-2xl font-semibold my-4">All Blogs</h2>

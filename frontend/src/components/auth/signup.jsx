@@ -1,16 +1,17 @@
 import { useState } from "react";
-import { signup } from "../../utils/auth";
+import { signup } from "../../axios/axios";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import InputField from "../inputs/InputField"; // Import the new InputField component
+import ButtonComponent from "../buttons/SubmitButton"; // Import the SubmitButton component
+
 const Signup = () => {
-  // states to manage the datas
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  // function to handle the submition of the signup details
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -32,14 +33,15 @@ const Signup = () => {
     }
 
     try {
-      console.log("p");
       const data = await signup({ name, email, password });
       console.log(data);
-      localStorage.setItem("token", data.token);
-      navigate("/login");
+      if (data.status == true) {
+        navigate("/login");
+      } else {
+        setError("Email already exists.");
+      }
     } catch (error) {
       console.error(error);
-      setError("there is a error ");
     }
   };
 
@@ -47,7 +49,7 @@ const Signup = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <form
         onSubmit={handleSubmit}
-        className="max-w-lg w-full p-8 bg-gradient-to-br  rounded-lg shadow-lg border border-gray-200 transform transition-all hover:scale-105"
+        className="max-w-lg w-full p-8 bg-gradient-to-br rounded-lg shadow-lg border border-gray-200 transform transition-all hover:scale-105"
       >
         <h2 className="text-3xl font-extrabold text-gray-900 mb-6 text-center">
           Signup
@@ -55,39 +57,28 @@ const Signup = () => {
 
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
 
-        <input
+        {/* Use InputField for each input */}
+        <InputField
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Your Name"
-          required
-          className="w-full p-4 mb-4 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-transform transform hover:scale-105"
         />
-
-        <input
+        <InputField
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Your Email"
-          required
-          className="w-full p-4 mb-4 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-transform transform hover:scale-105"
         />
-
-        <input
+        <InputField
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Your Password"
-          required
-          className="w-full p-4 mb-6 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-transform transform hover:scale-105"
         />
 
-        <button
-          type="submit"
-          className="w-full bg-black text-white font-semibold py-3 rounded-lg hover:bg-gradient-to-r   transition ease-in-out transform hover:scale-105"
-        >
-          Signup
-        </button>
+        {/* Use SubmitButton for the signup button */}
+        <ButtonComponent label="Signup" />
 
         <p className="mt-6 text-center text-gray-800">
           Already a member?{" "}
